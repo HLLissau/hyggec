@@ -178,18 +178,7 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
         | Ok(tlhs, trhs) ->
             Ok { Pos = node.Pos; Env = env; Type = TBool; Expr = Or(tlhs, trhs) }
         | Error(es) -> Error(es)
-    | SAnd(lhs, rhs) ->
-        match (binaryBooleanOpTyper "simplified and" node.Pos env lhs rhs) with
-        | Ok(tlhs, trhs) ->
-            Ok { Pos = node.Pos; Env = env; Type = TBool; Expr = SAnd(tlhs, trhs) }
-        | Error(es) -> Error(es)
-
-    | SOr(lhs, rhs) ->
-        match (binaryBooleanOpTyper "Simplified or" node.Pos env lhs rhs) with
-        | Ok(tlhs, trhs) ->
-            Ok { Pos = node.Pos; Env = env; Type = TBool; Expr = SOr(tlhs, trhs) }
-        | Error(es) -> Error(es)
-
+    
     | Not(arg) ->
         match (typer env arg) with
         | Ok(targ) when (isSubtypeOf env targ.Type TBool) ->
