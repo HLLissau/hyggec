@@ -1,6 +1,6 @@
-({println("1Left of 'and'"); true and false}) and ({println("1Right of 'and'"); true});
-({println("2Left of 'and'"); true and true}) and ({println("2Right of 'and'"); true and true});
-({println("3Left of 'or'"); false}) or ({println("3Right of 'or'"); true});
-({println("4Left of 'or'"); true}) or ({println("4Right of 'or'"); true});
-({println("5Left of 'or'"); false or false}) or ({println("5Right of 'or'"); true});
-({println("6Left of 'or'"); true or false}) or ({println("6Right of 'or'"); true})
+({println("1Left of 'and'"); true && false}) && ({println("1Right of 'and'"); true});
+({println("2Left of 'and'"); true && true}) && ({println("2Right of 'and'"); true && true});
+({println("3Left of 'or'"); false}) || ({println("3Right of 'or'"); true});
+({println("4Left of 'or'"); true}) || ({println("4Right of 'or'"); true});
+({println("5Left of 'or'"); false || false}) || ({println("5Right of 'or'"); true});
+({println("6Left of 'or'"); true || false}) || ({println("6Right of 'or'"); true})

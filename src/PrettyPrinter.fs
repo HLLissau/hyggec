@@ -103,6 +103,12 @@ let rec internal formatASTRec (node: AST.Node<'E,'T>): Tree =
     | Or(lhs, rhs) ->
         mkTree "Or" node [("lhs", formatASTRec lhs)
                           ("rhs", formatASTRec rhs)]
+    | SAnd(lhs, rhs) ->
+        mkTree "SAnd" node [("lhs", formatASTRec lhs)
+                            ("rhs", formatASTRec rhs)]
+    | SOr(lhs, rhs) ->
+        mkTree "SOr" node [("lhs", formatASTRec lhs)
+                           ("rhs", formatASTRec rhs)]
     | Not(arg) ->
         mkTree "Not" node [("arg", formatASTRec arg)]
     | Eq(lhs, rhs) ->

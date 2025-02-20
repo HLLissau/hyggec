@@ -38,6 +38,11 @@ let rec subst (node: Node<'E,'T>) (var: string) (sub: Node<'E,'T>): Node<'E,'T> 
         {node with Expr = And((subst lhs var sub), (subst rhs var sub))}
     | Or(lhs, rhs) ->
         {node with Expr = Or((subst lhs var sub), (subst rhs var sub))}
+    | SAnd(lhs, rhs) ->
+        {node with Expr = SAnd((subst lhs var sub), (subst rhs var sub))}
+    | SOr(lhs, rhs) ->
+        {node with Expr = SOr((subst lhs var sub), (subst rhs var sub))}
+    
     | Not(arg) ->
         {node with Expr = Not(subst arg var sub)}
 
