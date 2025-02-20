@@ -108,23 +108,38 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
         
     | And(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
+        | (BoolVal(v1), _) when (v1=false)  ->
+            Some(env, {node with Expr = BoolVal(v1)})
+        
         | (BoolVal(v1), BoolVal(v2)) ->
             Some(env, {node with Expr = BoolVal(v1 && v2)})
+        | (BoolVal(v1), _) when (v1=true)  ->
+            match (reduce env rhs) with
+            | Some(env', rhs') ->
+                Some(env', {node with Expr = And(lhs, rhs')})
+            | None -> None
         | (_, _) ->
-            match (reduceLhsRhs env lhs rhs) with
-            | Some(env', lhs', rhs') ->
-                Some(env', {node with Expr = And(lhs', rhs')})
+            match (reduce env lhs) with
+            | Some(env', lhs') ->
+                Some(env', {node with Expr = And(lhs', rhs)})
             | None -> None
 
     | Or(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
+        | (BoolVal(v1), _) when (v1=true)->
+            Some(env, {node with Expr = BoolVal(true)})
         | (BoolVal(v1), BoolVal(v2)) ->
             Some(env, {node with Expr = BoolVal(v1 || v2)})
-        | (_, _) ->
-            match (reduceLhsRhs env lhs rhs) with
-            | Some(env', lhs', rhs') ->
-                Some(env', {node with Expr = Or(lhs', rhs')})
+        | (BoolVal(v1), _) when (v1=false)->
+            match (reduce env rhs) with
+            | Some(env', rhs') ->
+                Some(env', {node with Expr = Or(lhs, rhs')})
             | None -> None
+        | (_, _) ->
+            match (reduce env lhs) with
+            | Some(env', lhs') ->
+                Some(env', {node with Expr = Or(lhs', rhs)})
+            | None -> None   
 
     | Not(arg) ->
         match arg.Expr with
