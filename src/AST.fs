@@ -89,7 +89,7 @@ and Expr<'E,'T> =
     /// Addition between lhs and rhs.
     | Add of lhs: Node<'E,'T>
            * rhs: Node<'E,'T>
-           
+
     /// Addition between lhs and rhs.
     | Sub of lhs: Node<'E,'T>
            * rhs: Node<'E,'T>
@@ -98,6 +98,11 @@ and Expr<'E,'T> =
     /// Multiplication between lhs and rhs.
     | Mult of lhs: Node<'E,'T>
             * rhs: Node<'E,'T>
+    
+    /// Squareroot of the 'Arg' expression 
+    /// newline.
+    | Sqrt of arg: Node<'E,'T>
+
 
     /// Logical and between lhs and rhs.
     | And of lhs: Node<'E,'T>

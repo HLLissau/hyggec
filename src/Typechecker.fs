@@ -161,7 +161,12 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
         | Ok(tpe, tlhs, trhs) ->
             Ok { Pos = node.Pos; Env = env; Type = tpe; Expr = Mult(tlhs, trhs) }
         | Error(es) -> Error(es)
-
+    | Sqrt(arg) ->
+        match (MonoNumericalOpTyper "Squareroot" node.Pos env arg) with
+        | Ok(tpe, tlhs) ->
+            Ok {Pos = node.Pos; Env = env; Type = tpe; Expr = Sqrt(tlhs)}
+        | Error(es) -> Error(es)
+   
     | And(lhs, rhs) ->
         match (binaryBooleanOpTyper "and" node.Pos env lhs rhs) with
         | Ok(tlhs, trhs) ->
@@ -318,6 +323,18 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
     | LetT(name, tpe, init, scope) ->
         letTypeAnnotTyper node.Pos env name tpe init scope
 
+
+and internal MonoNumericalOpTyper descr pos (env: TypingEnv)
+                                    (lhs: UntypedAST): Result<Type * TypedAST, TypeErrors> =
+    let tlhs = typer env lhs
+    match (tlhs) with
+    | Ok(ln) when (isSubtypeOf env ln.Type TFloat) ->
+        Ok(TFloat, ln)
+    | Ok(ln) ->
+        Error([(pos, $"%s{descr}: expected arguments of type 'float'")])
+    
+    | Error(es) -> Error(es)
+
 /// Compute the typing of a binary numerical operation, by computing and
 /// combining the typings of the 'lhs' and 'rhs'.  The argument 'descr' (used in
 /// error messages) specifies which expression is being typed, while 'pos'
@@ -325,6 +342,7 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
 /// (numerical) type, return a tuple containing the type of the resulting
 /// numerical expression, and the typed ASTs of the 'lhs' and 'rhs'.  Otherwise,
 /// return type errors.
+
 and internal binaryNumericalOpTyper descr pos (env: TypingEnv)
                                     (lhs: UntypedAST)
                                     (rhs: UntypedAST): Result<Type * TypedAST * TypedAST, TypeErrors> =

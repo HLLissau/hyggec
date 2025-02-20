@@ -96,7 +96,16 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Sub(lhs', rhs')})
             | None -> None
-
+    | Sqrt(rhs) ->
+        match (rhs.Expr) with
+        | (FloatVal(v1)) ->
+            Some(env, {node with Expr = FloatVal(sqrt(v1))})
+        | (_) ->
+            match (reduce env rhs) with
+            | Some(env', rhs') ->
+                Some(env', {node with Expr = Sqrt(rhs')})
+            | None -> None
+        
     | And(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
         | (BoolVal(v1), BoolVal(v2)) ->
@@ -216,7 +225,7 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
                     Some(env', n)
             | _ -> failwith $"BUG: unexpected 'Print' reduction ${n}"
         | None -> None
-
+    
     | If(cond, ifTrue, ifFalse) ->
         match cond.Expr with
         | BoolVal(v) ->

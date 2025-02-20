@@ -105,6 +105,15 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
             | Some(Storage.FPReg(_)) as st ->
                 failwith $"BUG: variable %s{name} of type %O{t} has unexpected storage %O{st}"
             | None -> failwith $"BUG: variable without storage: %s{name}"
+    | Sqrt(rhs) as expr->
+        let rhs = doCodegen env rhs
+        let opAsm = Asm(RV.FSQRT_S(FPReg.r(env.Target),FPReg.r(env.Target)))
+        rhs ++ opAsm
+        
+        
+
+
+
 
     | Add(lhs, rhs)
     | Sub(lhs, rhs)    

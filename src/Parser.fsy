@@ -74,6 +74,8 @@ let mkNode (parseState: IParseState, inputIdx: int, e: UntypedExpr): UntypedAST 
 %token PRINT
 %token PRINTLN
 %token ASSERT
+%token SQRT
+
 
 // Generic identifier (might result in a variable, pretype, etc.)
 %token <string> IDENT
